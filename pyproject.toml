@@ -20,6 +20,44 @@ flake8 = "^3.9.2"
 mypy = "^0.910"
 requests = "^2.26.0"
 
+
+[tool.pdm]
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest<7.0.0,>=6.2.5",
+    "flake8<4.0.0,>=3.9.2",
+    "mypy<1.0,>=0.910",
+    "requests<3.0.0,>=2.26.0",
+    "uvicorn>=0.18.3",
+]
+
+[tool.pdm.build]
+includes = []
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-pep517>=1.0.0"]
+build-backend = "pdm.pep517.api"
+
+
+[project]
+# PEP 621 project metadata
+# See https://www.python.org/dev/peps/pep-0621/
+authors = [
+    {name = "Oliver Dain", email = "oliver@dains.org"},
+]
+license = {text = "MIT"}
+requires-python = ">=3.8"
+dependencies = [
+    "fastapi<1.0.0,>=0.73.0",
+    "pydantic<2.0.0,>=1.8.2",
+]
+name = "classy-fastapi"
+version = "0.2.12"
+description = "Class based routing for FastAPI"
+readme = "README.md"
+keywords = ["FastAPI", "Class", "Instance", "Routing"]
+
+[project.urls]
+homepage = "https://gitlab.com/companionlabs-opensource/classy-fastapi"
+repository = "https://gitlab.com/companionlabs-opensource/classy-fastapi"
+
+[project.optional-dependencies]

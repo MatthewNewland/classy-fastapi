@@ -7,6 +7,7 @@ from .routable import Routable
 
 
 class ExampleRoutable(Routable):
+    prefix = "/api/v1/testing"
     def __init__(self, injected: int) -> None:
         super().__init__()
         self.__injected = injected
@@ -35,11 +36,11 @@ def test_routes_respond() -> None:
 
     client = TestClient(app)
 
-    response = client.get('/add/22')
+    response = client.get('/api/v1/testing/add/22')
     assert response.status_code == 200
     assert response.text == '24'
 
-    response = client.post('/sub/4')
+    response = client.post('/api/v1/testing/sub/4')
     assert response.status_code == 200
     assert response.text == '2'
 
@@ -51,18 +52,18 @@ def test_routes_only_respond_to_method() -> None:
 
     client = TestClient(app)
 
-    response = client.post('/add/22')
+    response = client.post('/api/v1/testing/add/22')
     assert response.status_code == 405
-    response = client.put('/add/22')
+    response = client.put('/api/v1/testing/add/22')
     assert response.status_code == 405
-    response = client.delete('/add/22')
+    response = client.delete('/api/v1/testing/add/22')
     assert response.status_code == 405
 
-    response = client.get('/sub/4')
+    response = client.get('/api/v1/testing/sub/4')
     assert response.status_code == 405
-    response = client.put('/sub/4')
+    response = client.put('/api/v1/testing/sub/4')
     assert response.status_code == 405
-    response = client.delete('/sub/4')
+    response = client.delete('/api/v1/testing/sub/4')
     assert response.status_code == 405
 
 
@@ -73,12 +74,12 @@ def test_async_methods_work() -> None:
 
     client = TestClient(app)
 
-    response = client.get('/async')
+    response = client.get('/api/v1/testing/async')
     assert response.status_code == 200
     assert response.text == '3'
 
     # Make sure we can call it more than once.
-    response = client.get('/async')
+    response = client.get('/api/v1/testing/async')
     assert response.status_code == 200
     assert response.text == '3'
 
@@ -90,6 +91,6 @@ def test_async_methods_with_args_work() -> None:
 
     client = TestClient(app)
 
-    response = client.get('/aecho/hello')
+    response = client.get('/api/v1/testing/aecho/hello')
     assert response.status_code == 200
     assert response.text == 'hello 2'

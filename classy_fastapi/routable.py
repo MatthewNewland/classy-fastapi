@@ -1,7 +1,7 @@
 import dataclasses
 import inspect
 from functools import partial
-from typing import Any, Callable, Dict, List, Tuple, Type, TypeVar, cast
+from typing import Any, Callable, Dict, List, Tuple, Type, TypeVar, cast, get_type_hints
 
 from fastapi.routing import APIRouter
 
@@ -31,9 +31,15 @@ class Routable(metaclass=RoutableMeta):
     in the _endpoints to it so they can be added to an app via FastAPI.include_router or similar.
     """
     _endpoints: List[EndpointDefinition] = []
+    prefix: str = ""
 
     def __init__(self, *args, **kwargs) -> None:
         self.router = APIRouter(*args, **kwargs)
+        self.router.prefix = self.prefix
         for endpoint in self._endpoints:
+            return_type = get_type_hints(endpoint).get("return", None)
+            if return_type is not None and endpoint.args.response_model is None:
+                endpoint.args.response_model = return_type
+
             self.router.add_api_route(endpoint=partial(endpoint.endpoint, self),
                                       **dataclasses.asdict(endpoint.args))
